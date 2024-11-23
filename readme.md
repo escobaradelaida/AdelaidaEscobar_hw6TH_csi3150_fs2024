@@ -47,6 +47,42 @@ The `quizApp.js` handles the main functionality of the quiz.
 - **`startQuiz()`**: Begins the quiz and shows the first question
 - **`startTimer()`**: Starts the timer for each of the questions and updates the counter.
 - **`showQuestion()`**: Displays the current question and the options that correspond to that question.
+```javascript
+function showQuetions(index) {
+  const que_text = document.querySelector(".que_text");
+
+  //creating a new span and div tag for question and option and passing the value using array index
+  // self exercise: re-write the following using backtick syntax for string in JS instead of concatenation operator
+  let que_tag =
+    "<span>" +
+    questions[index].numb +
+    ". " +
+    questions[index].question +
+    "</span>";
+  let option_tag =
+    '<div class="option"><span>' +
+    questions[index].options[0] +
+    "</span></div>" +
+    '<div class="option"><span>' +
+    questions[index].options[1] +
+    "</span></div>" +
+    '<div class="option"><span>' +
+    questions[index].options[2] +
+    "</span></div>" +
+    '<div class="option"><span>' +
+    questions[index].options[3] +
+    "</span></div>";
+  que_text.innerHTML = que_tag; //adding new (child) span tag inside que_tag
+  option_list.innerHTML = option_tag; //adding new (child) div tag inside option_tag
+
+  const option = option_list.querySelectorAll(".option");
+
+  // set onclick attribute to all available options
+  for (i = 0; i < option.length; i++) {
+    option[i].setAttribute("onclick", "optionSelected(this)");
+  }
+}
+```
 - **`nextQuestion()`**: Moves to the next question regardless of whether the user chose an option or if time is up.
 - **`optionSelected()`**: Handles user answer and updates their score.
 - **`showResult()`**: Displays the final score at the end of the quiz.
