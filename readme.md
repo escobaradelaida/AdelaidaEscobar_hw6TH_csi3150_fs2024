@@ -43,7 +43,35 @@ The `quizApp.js` handles the main functionality of the quiz.
 - **Timer**: This is the countdown for each question. If the timer runs out, it will automatically choose an answer (the correct answer is chosen).
 - **Next Question**: Moves to the next question once the user selects their answer or if the timer ends.
 
-#### Key Functions:
+#### Event Listeners: 
+These are functions within `quizApp.js` that wait for the user to click on certain buttons on the app. Here are the event listeners broken down:
+```javascript
+start_btn.addEventListener("click", (e) => {
+  info_box.classList.add("activeInfo"); //show info box
+});
+```
+**Explanation**: This will show the information box, which contains the instructions for the user.
+
+```javascript
+exit_btn.addEventListener("click", (e) => {
+  info_box.classList.remove("activeInfo"); //hide info box
+});
+```
+**Explanation**: This will hide the information box from the user once they click to start the quiz.
+
+````javascript
+continue_btn.addEventListener("click", (e) => {
+  info_box.classList.remove("activeInfo"); //hide info box
+  quiz_box.classList.add("activeQuiz"); //show quiz box
+  showQuetions(0); //calling showQestions function
+  queCounter(1); //passing 1 parameter to queCounter
+  startTimer(15); //calling startTimer function
+  startTimerLine(0); //calling startTimerLine function
+});
+````
+**Explanation**: This will trigger when the "Continue" button is clicked in the information box. It will hide the information box and brings up the `quiz_box`. It will starts the quiz by calling functions to show the questions, question counter, and timer.
+
+#### **Key Functions used for Functionality**:
 - **`startTimer()`**: Starts the timer for each of the questions and updates the counter.
 ```javascript
 // control the timer and actions associated to it
@@ -79,7 +107,7 @@ function startTimer(time) {
   }
 }
 ```
-Explanation: This will update te displayed time every second. Within the `if (time < 0)`, if the timer reaches 0, it automatically selects the correct answer, clears the timer, disables the options, and will show the "Next" button.
+Explanation: This will update the displayed time every second. Within the `if (time < 0)`, if the timer reaches 0, it automatically selects the correct answer, clears the timer, disables the options, and will show the "Next" button.
 
 - **`showQuetions()`**: Displays the current question and the options that correspond to that question.
 ```javascript
