@@ -44,9 +44,44 @@ The `quizApp.js` handles the main functionality of the quiz.
 - **Next Question**: Moves to the next question once the user selects their answer or if the timer ends.
 
 #### Key Functions:
-- **`startQuiz()`**: Begins the quiz and shows the first question
 - **`startTimer()`**: Starts the timer for each of the questions and updates the counter.
-- **`showQuestion()`**: Displays the current question and the options that correspond to that question.
+```javascript
+// control the timer and actions associated to it
+function startTimer(time) {
+  counter = setInterval(timer, 1000);
+  function timer() {
+    timeCount.textContent = time; //change the value of timeCount with time value
+    time--; //decrement the time value
+    if (time < 9) {
+      //if timer is less than 9
+      let addZero = timeCount.textContent;
+      timeCount.textContent = "0" + addZero; //add a 0 before time value
+    }
+    if (time < 0) {
+      //if timer is less than 0
+      clearInterval(counter); //clear counter
+      timeText.textContent = "Time Off"; //change the time text to time off
+      const allOptions = option_list.children.length; //get all option items
+      let correcAns = questions[que_count].answer; //get correct answer from array
+      for (i = 0; i < allOptions; i++) {
+        if (option_list.children[i].textContent == correcAns) {
+          //if there is an option which is matched to an array answer
+          option_list.children[i].setAttribute("class", "option correct"); //add green color to matched option
+          option_list.children[i].insertAdjacentHTML("beforeend", tickIconTag); //add tick icon to matched option
+          console.log("Time Off: Auto selected correct answer.");
+        }
+      }
+      for (i = 0; i < allOptions; i++) {
+        option_list.children[i].classList.add("disabled"); //once user select an option then disabled all options
+      }
+      next_btn.classList.add("show"); //show the next button if user selected any option
+    }
+  }
+}
+```
+Explanation: This will update te displayed time every second. Within the `if (time < 0)`, if the timer reaches 0, it automatically selects the correct answer, clears the timer, disables the options, and will show the "Next" button.
+
+- **`showQuetions()`**: Displays the current question and the options that correspond to that question.
 ```javascript
 function showQuetions(index) {
   const que_text = document.querySelector(".que_text");
@@ -83,9 +118,87 @@ function showQuetions(index) {
   }
 }
 ```
-- **`nextQuestion()`**: Moves to the next question regardless of whether the user chose an option or if time is up.
+Explanation: It will fetch the question from the array in `questions.js` based on the index and it will generate the HTML to display the question and option to the user.
+
 - **`optionSelected()`**: Handles user answer and updates their score.
+```javascript
+//if user clicked on option
+function optionSelected(answer) {
+  clearInterval(counter); //clear counter
+  clearInterval(counterLine); //clear counterLine
+  let userAns = answer.textContent; //getting user selected option
+  let correcAns = questions[que_count].answer; //getting correct answer from array
+  const allOptions = option_list.children.length; //getting all option items
+
+  //if user selected option is equal to array's correct answer
+  if (userAns == correcAns) {
+    userScore += 1; //update total score value increment by 1
+    answer.classList.add("correct"); //add green color to correct selected option
+    answer.insertAdjacentHTML("beforeend", tickIconTag); //add tick icon to correct selected option
+    console.log("Correct Answer");
+    console.log("Your correct answers = " + userScore);
+  } else {
+    answer.classList.add("incorrect"); //add red color to correct selected option
+    answer.insertAdjacentHTML("beforeend", crossIconTag); //add cross icon to correct selected option
+    console.log("Wrong Answer");
+
+    for (i = 0; i < allOptions; i++) {
+      if (option_list.children[i].textContent == correcAns) {
+        //if there is an option which is matched to an array answer
+        option_list.children[i].setAttribute("class", "option correct"); //add green color to matched option
+        option_list.children[i].insertAdjacentHTML("beforeend", tickIconTag); //add tick icon to matched option
+        console.log("Auto selected correct answer.");
+      }
+    }
+  }
+  for (i = 0; i < allOptions; i++) {
+    option_list.children[i].classList.add("disabled"); //once user select an option, disable all options
+  }
+  next_btn.classList.add("show"); //show the next button if user selected any option
+}
+```
+Explanation: This function will compate the selected option with the correct answer. It will update the score on whether right or wrong, colors the option (green for right, red for wrong), disables the options, and then shows the "Next" button for the user to proceed.
+
 - **`showResult()`**: Displays the final score at the end of the quiz.
+```javascript
+// display for result box based on user performance
+function showResult() {
+  info_box.classList.remove("activeInfo"); //hide info box
+  quiz_box.classList.remove("activeQuiz"); //hide quiz box
+  result_box.classList.add("activeResult"); //show result box
+  const scoreText = result_box.querySelector(".score_text");
+  if (userScore > 3) {
+    // if user scored more than 3
+    //create a new span tag and pass the user score number and total question number
+    let scoreTag =
+      "<span>and congrats! , You got <p>" +
+      userScore +
+      "</p> out of <p>" +
+      questions.length +
+      "</p></span>";
+    scoreText.innerHTML = scoreTag; //add new span tag inside score_Text
+  } else if (userScore > 1) {
+    // if user scored more than 1
+    let scoreTag =
+      "<span>and nice , You got <p>" +
+      userScore +
+      "</p> out of <p>" +
+      questions.length +
+      "</p></span>";
+    scoreText.innerHTML = scoreTag;
+  } else {
+    // if user scored less than 1
+    let scoreTag =
+      "<span>and sorry , You got only <p>" +
+      userScore +
+      "</p> out of <p>" +
+      questions.length +
+      "</p></span>";
+    scoreText.innerHTML = scoreTag;
+  }
+}
+```
+Explanation: This function will hide the quiz box and show the results box. This results box will contain the user's score with a message. These messages are written in HTML so that they can work in conjunction with the `index.html` file. 
 
 
 #### 3. Questions Data (`questions.js`)
